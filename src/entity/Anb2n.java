@@ -21,7 +21,7 @@ public class Anb2n extends Palavra{
 		super(palavra,pilha,lista);
 	}
 	
-	public void empilhar(){
+	public boolean empilhar(){
 		List<Character> list = new ArrayList<>();
 		Stack<Character> stack = new Stack<>();
 		int i;
@@ -32,7 +32,7 @@ public class Anb2n extends Palavra{
 			}else if(getPalavra().charAt(i) == 'b'){
 				break;
 			}else{
-				break;
+				return false;
 			}
 		}
 		for(int j=i;j<getPalavra().length();j++){
@@ -41,44 +41,50 @@ public class Anb2n extends Palavra{
 			}else if(getPalavra().charAt(j)=='b'){
 				list.add('b');
 			}else{
-				break;
+				return false;
 			}
 		}
 		setPilha(stack);
 		setLista(list);
+		return true;
 	}
 	
 	public boolean verifica(){
-		empilhar();
-		Stack<Character> stack = getPilha();
-		List<Character> list = getLista();
-		int aux = 0;
-		boolean par = false;
-		Character letra;
-		for(Character c : list){
-			if(par==false){
-				try{
-					letra = stack.pop();
-					System.out.println(letra+ " foi removido da pilha");
-					par = true;	
-				}catch(EmptyStackException ex){
-					stack.add('a');
+		boolean ok = empilhar();
+		if(ok == true){
+			Stack<Character> stack = getPilha();
+			List<Character> list = getLista();
+			int aux = 0;
+			boolean par = false;
+			Character letra;
+			for(Character c : list){
+				if(par==false){
+					try{
+						letra = stack.pop();
+						System.out.println(letra+ " foi removido da pilha");
+						par = true;	
+					}catch(EmptyStackException ex){
+						stack.add('a');
+					}
+				}else{
+					par = false;
 				}
-			}else{
-				par = false;
+				aux++;
 			}
-			aux++;
-		}
-		list.clear();
-		if(par==true){
-			list.add('b');
-		}
-		setPilha(stack);
-		setLista(list);
-		//System.out.println(getPilha().isEmpty()+ " "+getLista().isEmpty());//teste
-		if(getPilha().isEmpty()&&getLista().isEmpty()){
-			System.out.println("a Palavra e um AnB2n");
-			return true;
+			list.clear();
+			if(par==true){
+				list.add('b');
+			}
+			setPilha(stack);
+			setLista(list);
+			//System.out.println(getPilha().isEmpty()+ " "+getLista().isEmpty());//teste
+			if(getPilha().isEmpty()&&getLista().isEmpty()){
+				System.out.println("a Palavra e um AnB2n");
+				return true;
+			}else{
+				System.out.println("a Palavra nao e um AnB2n");
+				return false;
+			}
 		}else{
 			System.out.println("a Palavra nao e um AnB2n");
 			return false;
@@ -86,7 +92,7 @@ public class Anb2n extends Palavra{
 	}
 	
 	public static void main(String[] args) {
-		Anb2n a = new Anb2n("aabbbb");
+		Anb2n a = new Anb2n("aaabbbbbb");
 		a.verifica();
 	}
 }
